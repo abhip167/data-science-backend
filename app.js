@@ -1,5 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
+import compression from "compression";
+import helmet from "helmet";
 import busyBoy from "connect-busboy";
 import path from "path";
 import fs from "fs-extra";
@@ -13,6 +15,8 @@ const app = express();
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(helmet());
+app.use(compression());
 
 // Configure file upload middleware
 app.use(
