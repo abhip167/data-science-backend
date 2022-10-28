@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 const DBSOURCE = "DataScience.sqlite";
 
 const CREATE_DETAIL_QUERY =
-  "INSERT INTO data_science (name, email, phone, nature_of_work, description, file_path) VALUES (?,?,?, ?, ?, ?)";
+  "INSERT INTO data_science (name, email, phone, nature_of_work, description) VALUES (?,?,?, ?, ?)";
 
 const CREATE_DETAILS_TABLE_QUERY = `CREATE TABLE data_science (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -49,7 +49,7 @@ app.get("/details", (req, res) => {
 app.post("/details", userValidationRules(), validate, (req, res) => {
   console.log(req.body);
   const { name, email, phone, natureOfWork, description } = req.body;
-  const params = [name, email, phone, natureOfWork, description, "[null]"];
+  const params = [name, email, phone, natureOfWork, description];
 
   db.run(CREATE_DETAIL_QUERY, params, function (err, result) {
     if (err) {
