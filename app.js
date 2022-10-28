@@ -91,5 +91,5 @@ app.route("/upload").post((req, res, next) => {
   });
 });
 
-app.listen(3000);
-console.log("Server started at", 3000);
+app.listen(process.env.PORT || 3000);
+console.log("Server started at", process.env.PORT || 3000);
