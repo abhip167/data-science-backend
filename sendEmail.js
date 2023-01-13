@@ -4,7 +4,7 @@
 import sgMail from "@sendgrid/mail";
 
 sgMail.setApiKey(
-  "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"
+  process.env.SENDGRID_PUBLIC_KEY
 );
 
 const sendAnEmail = ({ email, name, phone, natureOfWork, description }) => {
