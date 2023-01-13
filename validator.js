@@ -26,7 +26,7 @@ const userValidationRules = () => {
       .withMessage(
         "Please provide some information about the nature of data submitted"
       )
-      .isLength({ max: 120 })
+      .isLength({ max: 1200 })
       .withMessage("Please decrease word size of Nature of Work")
       .trim()
       .escape(),
@@ -37,7 +37,7 @@ const userValidationRules = () => {
       .withMessage(
         "Please provide some information about the type of data submitted"
       )
-      .isLength({ max: 120 })
+      .isLength({ max: 1200 })
       .withMessage("Please decrease word count of Nature of Work")
       .trim()
       .escape(),

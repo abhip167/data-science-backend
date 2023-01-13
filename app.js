@@ -5,10 +5,12 @@ import helmet from "helmet";
 import busyBoy from "connect-busboy";
 import path from "path";
 import fs from "fs-extra";
+import cors from "cors";
 
 import { validate, userValidationRules } from "./validator.js";
 
 import { db, CREATE_DETAIL_QUERY } from "./database.js";
+import { sendAnEmail } from "./sendEmail.js";
 
 const app = express();
 
@@ -16,6 +18,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(cors());
 app.use(compression());
 
 // Configure file upload middleware
@@ -25,7 +28,7 @@ app.use(
   })
 );
 
-const uploadPath = path.join(process.cwd(), "fu/"); // Register the upload path
+const uploadPath = path.join(process.cwd(), "data-files/"); // Register the upload path
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
 
 app.get("/", (req, res) => {
@@ -60,6 +63,8 @@ app.post("/details", userValidationRules(), validate, (req, res) => {
       message: "success",
       id: this.lastID,
     });
+
+    sendAnEmail({ name, email, phone, natureOfWork, description });
   });
 });
 
@@ -70,13 +75,13 @@ app.route("/upload").post((req, res, next) => {
   req.pipe(req.busboy); // Pipe it trough busboy
 
   req.busboy.on("file", (fieldname, file, filename) => {
-    console.log(filename);
-    console.log(fieldname);
+    console.log({ filename, fieldname, file });
 
     // Create a write stream of the new file
     const fstream = fs.createWriteStream(
       path.join(uploadPath, filename.filename)
     );
+
     // Pipe it trough
     file.pipe(fstream);
 
