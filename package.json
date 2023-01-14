@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "compression": "^1.7.4",
     "connect-busboy": "^1.0.0",
@@ -21,10 +22,12 @@
     "express-validator": "^6.14.2",
     "fs-extra": "^10.1.0",
     "helmet": "^6.0.0",
+    "jsonwebtoken": "^9.0.0",
     "nodemailer": "^6.8.0",
     "sqlite3": "^5.1.2"
   },
   "devDependencies": {
+    "dotenv": "^16.0.3",
     "nodemon": "^2.0.20"
   }
 }

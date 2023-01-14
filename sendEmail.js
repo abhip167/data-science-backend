@@ -9,7 +9,7 @@ sgMail.setApiKey(
 
 const sendAnEmail = ({ email, name, phone, natureOfWork, description }) => {
   const msg = {
-    to: "fateme.rajabiyazdi@carleton.ca", // Change to your recipient
+    to: "abhishekpatel167@gmail.com;abhishekpatelomg@gmail.com", // Change to your recipient
     from: "abhishekmayurbhaipat@cmail.carleton.ca", // Change to your verified sender
     subject: "Action required: Send a document request",
     text: "Hello, please send a document request to below details",

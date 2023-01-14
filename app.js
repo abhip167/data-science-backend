@@ -6,11 +6,15 @@ import busyBoy from "connect-busboy";
 import path from "path";
 import fs from "fs-extra";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+
+import auth from "./middleware/auth.js";
 
 import { validate, userValidationRules } from "./validator.js";
 
-import { db, CREATE_DETAIL_QUERY } from "./database.js";
+import { db, CREATE_DETAIL_QUERY, SEARCH_USER_BY_EMAIL } from "./database.js";
 import { sendAnEmail } from "./sendEmail.js";
+import { comparePassword } from "./PasswordUtils.js";
 
 const app = express();
 
@@ -35,7 +39,7 @@ app.get("/", (req, res) => {
   res.status(403);
 });
 
-app.get("/details", (req, res) => {
+app.get("/details", auth, (req, res) => {
   const sql = "select * from data_science";
   db.all(sql, [], function (err, rows) {
     if (err) {
@@ -66,6 +70,54 @@ app.post("/details", userValidationRules(), validate, (req, res) => {
 
     sendAnEmail({ name, email, phone, natureOfWork, description });
   });
+});
+
+/**
+ * User Login API - Login is only allowed for internal members.
+ * In order to create new user create directly in the database as that was discussed in the meeting.
+ */
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!(email && password)) {
+      res.status(400).send("Email and password are required.");
+    }
+
+    db.get(SEARCH_USER_BY_EMAIL, [email], async (error, user) => {
+
+      if (error) {
+        console.error(error);
+        return res
+          .status(400)
+          .send(
+            "Internal server occured. Please contact contact the administrator."
+          );
+      }
+      
+      const passwordMatch = await comparePassword(password, user.password);
+
+      if (user && passwordMatch) {
+        // Create token
+        const token = jwt.sign(
+          { user_id: user.id, email },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "2h",
+          }
+        );
+
+        // save user token
+        user.token = token;
+
+        // user
+        return res.status(200).json(user);
+      }
+
+      return res.status(400).send("Invalid Credentials");
+    });
+  } catch {}
 });
 
 /**
