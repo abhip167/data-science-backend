@@ -10,9 +10,20 @@ import jwt from "jsonwebtoken";
 
 import auth from "./middleware/auth.js";
 
-import { validate, userValidationRules } from "./validator.js";
+import {
+  validate,
+  userValidationRules,
+  recepientValidationRules,
+} from "./validator.js";
 
-import { db, CREATE_DETAIL_QUERY, SEARCH_USER_BY_EMAIL } from "./database.js";
+import {
+  db,
+  CREATE_DETAIL_QUERY,
+  SEARCH_USER_BY_EMAIL,
+  CREATE_RECEPIENT_QUERY,
+  UPDATE_RECEPIENT_QUERY,
+  DELETE_RECEPIENT_QUERY,
+} from "./database.js";
 import { sendAnEmail } from "./sendEmail.js";
 import { comparePassword } from "./PasswordUtils.js";
 
@@ -63,12 +74,109 @@ app.post("/details", userValidationRules(), validate, (req, res) => {
       res.status(400).json({ error: err.message });
       return;
     }
+
+    db.all("select email from recepients", [], function (err, rows) {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+        id: this.lastID,
+      });
+
+      const recepients = rows.map((row) => row.email);
+
+      sendAnEmail({
+        recepients,
+        name,
+        email,
+        phone,
+        natureOfWork,
+        description,
+      });
+    });
+  });
+});
+
+app.get("/recepients", auth, (req, res) => {
+  const sql = "select * from recepients";
+  db.all(sql, [], function (err, rows) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      rows,
+    });
+  });
+});
+
+app.post(
+  "/recepients",
+  auth,
+  recepientValidationRules(),
+  validate,
+  (req, res) => {
+    console.log(req.body);
+    const { first_name, last_name, email } = req.body;
+    const params = [first_name, last_name, email];
+
+    db.run(CREATE_RECEPIENT_QUERY, params, function (err, result) {
+      if (err) {
+        const { errno, message, code } = err;
+        res.status(400).json({ error: { errno, message, code } });
+        return;
+      }
+      res.json({
+        message: "success",
+        id: this.lastID,
+      });
+    });
+  }
+);
+
+app.patch(
+  "/recepients/:id",
+  auth,
+  recepientValidationRules(),
+  validate,
+  (req, res) => {
+    console.log(req.body);
+    const { first_name, last_name, email } = req.body;
+    const params = [first_name, last_name, email, req.params.id];
+
+    db.run(UPDATE_RECEPIENT_QUERY, params, function (err, result) {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+      });
+    });
+  }
+);
+
+app.delete("/recepients/:id", auth, validate, (req, res) => {
+  console.log(req.body);
+  const params = [req.params.id];
+
+  db.run(DELETE_RECEPIENT_QUERY, params, function (err, result) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    } else if (this.changes == 0) {
+      res
+        .status(400)
+        .json({ error: `Recepient with id ${req.params.id} not found` });
+      return;
+    }
     res.json({
       message: "success",
       id: this.lastID,
     });
-
-    sendAnEmail({ name, email, phone, natureOfWork, description });
   });
 });
 
@@ -86,7 +194,6 @@ app.post("/login", async (req, res) => {
     }
 
     db.get(SEARCH_USER_BY_EMAIL, [email], async (error, user) => {
-
       if (error) {
         console.error(error);
         return res
@@ -95,7 +202,7 @@ app.post("/login", async (req, res) => {
             "Internal server occured. Please contact contact the administrator."
           );
       }
-      
+
       const passwordMatch = await comparePassword(password, user.password);
 
       if (user && passwordMatch) {

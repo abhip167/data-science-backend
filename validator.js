@@ -44,6 +44,31 @@ const userValidationRules = () => {
   ];
 };
 
+const recepientValidationRules = () => {
+  return [
+    body("first_name")
+      .not()
+      .isEmpty()
+      .withMessage("Please enter first name of recepient")
+      .isLength({ max: 25 })
+      .withMessage("Please decrease word count of name")
+      .trim()
+      .escape(),
+    body("last_name")
+      .not()
+      .isEmpty()
+      .withMessage("Please enter last name of recepient")
+      .isLength({ max: 25 })
+      .withMessage("Please decrease word count of name")
+      .trim()
+      .escape(),
+    body("email")
+      .isEmail()
+      .withMessage("Please enter valid email")
+      .normalizeEmail(),
+  ];
+};
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
@@ -53,8 +78,8 @@ const validate = (req, res, next) => {
   errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
 
   return res.status(422).json({
-    errors: extractedErrors,
+    validationErrors: extractedErrors,
   });
 };
 
-export { userValidationRules, validate };
+export { userValidationRules, recepientValidationRules, validate };
