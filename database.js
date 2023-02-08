@@ -44,7 +44,8 @@ const CREATE_DETAILS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS data_science (
     email text,
     phone text,
     nature_of_work text,
-    description text
+    description text,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )`;
 
 const CREATE_FILES_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS data_science_files (

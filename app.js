@@ -51,7 +51,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/details", auth, (req, res) => {
-  const sql = "select * from data_science";
+  const sql =
+    "select name, email, phone, nature_of_work, description, STRFTIME('%d/%m/%Y, %H:%M', timestamp) as timestamp from data_science";
   db.all(sql, [], function (err, rows) {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -211,7 +212,7 @@ app.post("/login", async (req, res) => {
           { user_id: user.id, email },
           process.env.TOKEN_KEY,
           {
-            expiresIn: "2h",
+            expiresIn: "5h",
           }
         );
 
