@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/8285e2f9-f6b5-4fef-b305-ccda1cb5aed9/resourceGroups/DataScienceWeb_group/providers/Microsoft.Web/sites/DataScienceBackend",
+    "appService.deploySubpath": "."
+}
