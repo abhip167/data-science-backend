@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "serve": "nodemon -r dotenv/config app.js",
-    "start": "node -r dotenv/config app.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
