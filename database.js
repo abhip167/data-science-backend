@@ -4,7 +4,7 @@ import { hashPassword } from "./PasswordUtils.js";
 const DBSOURCE = "DataScience.sqlite";
 
 const CREATE_DETAIL_QUERY =
-  "INSERT INTO data_science (name, email, phone, nature_of_work, description) VALUES (?,?,?,?,?)";
+  "INSERT INTO data_science (name, email, phone, organization, nature_of_work, description) VALUES (?,?,?,?,?,?)";
 
 const CREATE_USER_QUERY =
   "INSERT INTO users (first_name, last_name, email, password) VALUES (?,?,?,?)";
@@ -41,6 +41,7 @@ const CREATE_RECEPIENTS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS recepients (
 const CREATE_DETAILS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS data_science (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name text,
+    organization text,
     email text,
     phone text,
     nature_of_work text,

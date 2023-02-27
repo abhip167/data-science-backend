@@ -10,6 +10,7 @@ const sendAnEmail = ({
   email,
   name,
   phone,
+  organization,
   natureOfWork,
   description,
 }) => {
@@ -24,6 +25,10 @@ const sendAnEmail = ({
             </p>
             <h3>Details of the data donor</h3>
           <ul>
+              <li><b>Name</b> : ${name}</li>
+              <br>
+              <li><b>Organization</b> : ${organization}</li>
+              <br>
               <li><b>Email</b> : ${email}</li>
               <br>
               <li><b>Phone</b> : ${phone}</li>
@@ -45,4 +50,46 @@ const sendAnEmail = ({
     });
 };
 
-export { sendAnEmail };
+const recepientAdditionEmail = ({ first_name, last_name, email }) => {
+  const msg = {
+    to: email, // Change to your recipient
+    from: "abhishekmayurbhaipat@cmail.carleton.ca", // Change to your verified sender
+    subject: "Notification: You have been added as a recepient",
+    text: "Hello, please send a document request to below details",
+    html: `
+            <p>Hello,
+              You are now been added as a recepient for Carleton Data Science Portal. Every time a user submits a data request, you will be notified.
+            </p>
+            <h3>Actions</h3>
+          <ul>
+              <li>Record the user details from the portal admin page</li>
+              <br>
+              <li>Send a document request to the user</li>
+              <br>
+        
+          </ul>
+
+          <p> In case you want to unsubscribe, please contact the portal admin. Details of the recepient are:</p>
+          <ul>
+              <li><b>First Name</b> : ${first_name}</li>
+              <br>
+              <li><b>Last Name</b> : ${last_name}</li>
+              <br>
+              <li><b>Email</b> : ${email}</li>
+          </ul>
+
+          <p>Thank you for your time and effort.</p>
+        `,
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Recepient addition Email sent");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export { sendAnEmail, recepientAdditionEmail };

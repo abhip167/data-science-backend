@@ -24,7 +24,7 @@ import {
   UPDATE_RECEPIENT_QUERY,
   DELETE_RECEPIENT_QUERY,
 } from "./database.js";
-import { sendAnEmail } from "./sendEmail.js";
+import { sendAnEmail, recepientAdditionEmail } from "./sendEmail.js";
 import { comparePassword } from "./PasswordUtils.js";
 
 const app = express();
@@ -52,7 +52,7 @@ app.get("/", (req, res) => {
 
 app.get("/details", auth, (req, res) => {
   const sql =
-    "select name, email, phone, nature_of_work, description, STRFTIME('%d/%m/%Y, %H:%M', timestamp) as timestamp from data_science";
+    "select name, organization, email, phone, nature_of_work, description, STRFTIME('%d/%m/%Y, %H:%M', timestamp) as timestamp from data_science";
   db.all(sql, [], function (err, rows) {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -67,8 +67,9 @@ app.get("/details", auth, (req, res) => {
 
 app.post("/details", userValidationRules(), validate, (req, res) => {
   console.log(req.body);
-  const { name, email, phone, natureOfWork, description } = req.body;
-  const params = [name, email, phone, natureOfWork, description];
+  const { name, email, organization, phone, natureOfWork, description } =
+    req.body;
+  const params = [name, email, phone, organization, natureOfWork, description];
 
   db.run(CREATE_DETAIL_QUERY, params, function (err, result) {
     if (err) {
@@ -91,6 +92,7 @@ app.post("/details", userValidationRules(), validate, (req, res) => {
       sendAnEmail({
         recepients,
         name,
+        organization,
         email,
         phone,
         natureOfWork,
@@ -130,6 +132,7 @@ app.post(
         res.status(400).json({ error: { errno, message, code } });
         return;
       }
+      recepientAdditionEmail({ first_name, last_name, email });
       res.json({
         message: "success",
         id: this.lastID,
@@ -191,7 +194,7 @@ app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (!(email && password)) {
-      res.status(400).send("Email and password are required.");
+      return res.status(400).send("Email and password are required.");
     }
 
     db.get(SEARCH_USER_BY_EMAIL, [email], async (error, user) => {
@@ -220,7 +223,12 @@ app.post("/login", async (req, res) => {
         user.token = token;
 
         // user
-        return res.status(200).json(user);
+        return res.status(200).json({
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          token,
+        });
       }
 
       return res.status(400).send("Invalid Credentials");
