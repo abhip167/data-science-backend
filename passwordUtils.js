@@ -1,15 +1,15 @@
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs";
 
- function hashPassword(plaintextPassword) {
-    const hash =  bcrypt.hashSync(plaintextPassword, 10);
-    return hash
+function hashPassword(plaintextPassword) {
+  const hash = bcrypt.hashSync(plaintextPassword, 10);
+  return hash;
 }
 
-async function  comparePassword(plaintextPassword, hash) {
-    const result =  await bcrypt.compare(plaintextPassword, hash);
-    return result;
+async function comparePassword(plaintextPassword, hash) {
+  const result = await bcrypt.compare(plaintextPassword, hash);
+  return result;
 }
 
-console.log(process.env.DEFAULT_USER_PASSWORD)
+console.log(process.env.DEFAULT_USER_PASSWORD);
 
-export {hashPassword, comparePassword}
+export { hashPassword, comparePassword };
