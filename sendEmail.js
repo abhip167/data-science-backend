@@ -37,6 +37,8 @@ const sendAnEmail = ({
               <br>
               <li><b>Description</b> : ${description}</li>
           </ul>
+
+          <p>Thank you for your time and effort.</p>
         `,
   };
 
