@@ -48,7 +48,7 @@ const uploadPath = path.join(process.cwd(), "data-files/"); // Register the uplo
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
 
 app.get("/", (req, res) => {
-  res.status(403);
+  res.send("Hello from Carleton Data Science Team!");
 });
 
 app.get("/details", auth, (req, res) => {
