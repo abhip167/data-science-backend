@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 
 app.get("/details", auth, (req, res) => {
   const sql =
-    "select name, organization, email, phone, nature_of_work, description, STRFTIME('%d/%m/%Y, %H:%M', timestamp) as timestamp from data_science";
+    "select name, organization, email, phone, nature_of_work, description, STRFTIME('%d/%m/%Y, %H:%M', timestamp) as timestamp, data_collection_method, data_format, data_update_frequency, ethics_approval, collaboration, financial_support from data_science";
   db.all(sql, [], function (err, rows) {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -68,9 +68,34 @@ app.get("/details", auth, (req, res) => {
 
 app.post("/details", userValidationRules(), validate, (req, res) => {
   console.log(req.body);
-  const { name, email, organization, phone, natureOfWork, description } =
-    req.body;
-  const params = [name, email, phone, organization, natureOfWork, description];
+  const {
+    name,
+    email,
+    organization,
+    phone,
+    natureOfWork,
+    description,
+    collectionMethod,
+    format,
+    updateFrequency,
+    ethicsApproval,
+    collaboration,
+    financialSupport,
+  } = req.body;
+  const params = [
+    name,
+    email,
+    phone,
+    organization,
+    natureOfWork,
+    description,
+    collectionMethod,
+    format,
+    updateFrequency,
+    ethicsApproval,
+    collaboration,
+    financialSupport,
+  ];
 
   db.run(CREATE_DETAIL_QUERY, params, function (err, result) {
     if (err) {

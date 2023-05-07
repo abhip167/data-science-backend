@@ -4,7 +4,7 @@ import { hashPassword } from "./PasswordUtils.js";
 const DBSOURCE = "DataScience.sqlite";
 
 const CREATE_DETAIL_QUERY =
-  "INSERT INTO data_science (name, email, phone, organization, nature_of_work, description) VALUES (?,?,?,?,?,?)";
+  "INSERT INTO data_science (name, email, phone, organization, nature_of_work, description,    data_collection_method, data_format, data_update_frequency, ethics_approval, collaboration, financial_support ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 const CREATE_USER_QUERY =
   "INSERT INTO users (first_name, last_name, email, password) VALUES (?,?,?,?)";
@@ -46,6 +46,12 @@ const CREATE_DETAILS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS data_science (
     phone text,
     nature_of_work text,
     description text,
+    data_collection_method text,
+    data_format text,
+    data_update_frequency text,
+    ethics_approval text,
+    collaboration text,
+    financial_support text,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )`;
 
@@ -127,7 +133,11 @@ const createRecepientsTable = (databaseObject) => {
     createDefaultRecepient(databaseObject);
   });
 };
-
+/**
+ * Creates default user if not exists
+ * @param {*} databaseObject
+ * @returns User with Email - ${DEFAULT_USER.email} already exists.
+ */
 const createDefaultUser = (databaseObject) => {
   databaseObject.get(
     SEARCH_USER_BY_EMAIL,
