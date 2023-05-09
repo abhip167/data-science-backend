@@ -123,6 +123,12 @@ app.post("/details", userValidationRules(), validate, (req, res) => {
         phone,
         natureOfWork,
         description,
+        collectionMethod,
+        format,
+        updateFrequency,
+        ethicsApproval,
+        collaboration,
+        financialSupport,
       });
     });
   });

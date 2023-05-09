@@ -13,6 +13,12 @@ const sendAnEmail = ({
   organization,
   natureOfWork,
   description,
+  collectionMethod,
+  format,
+  updateFrequency,
+  ethicsApproval,
+  collaboration,
+  financialSupport,
 }) => {
   const msg = {
     to: recepients, // Change to your recipient
@@ -36,6 +42,18 @@ const sendAnEmail = ({
               <li><b>Nature of work</b> : ${natureOfWork}</li>
               <br>
               <li><b>Description</b> : ${description}</li>
+              <br>
+              <li><b>Collection Method</b> : ${collectionMethod}</li>
+              <br>
+              <li><b>Data format</b> : ${format}</li>
+              <br>
+              <li><b>Update Frequency</b> : ${updateFrequency}</li>
+              <br>
+              <li><b>Ethics Approval</b> : ${ethicsApproval}</li>
+              <br>
+              <li><b>Available for Collaboration</b> : ${collaboration}</li>
+              <br>
+              <li><b>Financial Support</b> : ${financialSupport}</li>
           </ul>
 
           <p>Thank you for your time and effort.</p>
